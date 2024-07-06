@@ -1,16 +1,33 @@
 const express = require("express");
-const routes = require("./gameCollectionRoutes");
+const routes = require("./routes");
+const cors = require("cors");
+const { connectToDatabase } = require("./db"); // Import the connectToDatabase function
 const app = express();
 const port = 8585;
-//Middlewares
-//Este middleware sirve para parsear el contenido de los requests
-//que están "url encoded"
+
+// Middlewares
+app.use(cors());
 app.use(express.urlencoded({ extended: true }));
-//Este middleware nos sirve para recuperar el contenido del
-//body del request y response.
 app.use(express.json());
-//Llamamos nuestras rutas.
-routes(app);
-//Iniciamos el servidor
-app.listen(port);
-console.log("Servidor escuchando en puerto: " + port);
+
+async function main() {
+  try {
+    const db = await connectToDatabase();
+    routes(app, db);
+    app.listen(port, () => {
+      console.log("Servidor escuchando en puerto: " + port);
+    });
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+main().catch(console.error);
+
+// DEPRECATED: We used it for debugging purposes
+async function listDatabases(db) {
+  databasesList = await db.admin().listDatabases();
+
+  console.log("Databases:");
+  databasesList.databases.forEach((db) => console.log(` - ${db.name}`));
+}

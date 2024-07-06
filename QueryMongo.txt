@@ -1,0 +1,18 @@
+Obtener toda la información de un usuario en base a su correo electrónico:
+
+db.usuarios.findOne({ "correoElectronico": "usuario1@gmail.com" })
+
+
+Obtener todos los eventos del log que correspondan a un usuario en específico:
+
+db.log.find({ "username": "usuario1" })
+
+
+Obtener todos los eventos del log que correspondan a un rango de fechas en específico:
+
+db.log.find({ "fechaEvento": { $gte: ISODate("2023-01-02"), $lte: ISODate("2023-01-05") } })
+
+
+Obtener todos los eventos del log que correspondan a un usuario en específico y que el evento contenga las palabras de búsqueda indicadas:
+
+db.log.find({ "username": "usuario1", "evento": { $regex: /Login/i } })
